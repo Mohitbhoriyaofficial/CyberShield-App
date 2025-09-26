@@ -1,0 +1,31 @@
+cat > screens/Dashboard.jsx <<EOL
+import React, {useEffect,useState} from "react";
+import {ScrollView, View, Text} from "react-native";
+
+export default function Dashboard(){
+  const [alerts,setAlerts]=useState([]);
+  useEffect(()=>{
+    const ws=new WebSocket("ws://192.168.1.100:8000/ws/alerts"); // replace with your PC IP
+    ws.onmessage=e=>{
+      const msg=JSON.parse(e.data);
+      if(msg.type==="alert") setAlerts(a=>[msg.event,...a]);
+    }
+  },[]);
+
+  return (
+    <ScrollView style={{padding:20}}>
+      <Text style={{fontSize:20,fontWeight:"bold"}}>Recent Alerts</Text>
+      {alerts.length===0 && <Text>No alerts yet.</Text>}
+      {alerts.map((a,i)=>(
+        <View key={i} style={{marginVertical:10,padding:10,borderWidth:1,borderColor:"#ccc",borderRadius:8}}>
+          <Text>Type: {a.type}</Text>
+          {a.message && <Text>Message: {a.message}</Text>}
+          {a.url && <Text>URL: {a.url}</Text>}
+          {a.patterns && <Text>Patterns: {a.patterns.join(", ")}</Text>}
+          <Text>Severity: {a.severity}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  )
+}
+EOL

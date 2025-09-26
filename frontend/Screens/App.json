@@ -1,1 +1,22 @@
+cat > App.jsx <<EOL
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Dashboard from "./screens/Dashboard";
+import SMSScanner from "./screens/SMSScanner";
+import URLScanner from "./screens/URLScanner";
 
+const Tab = createBottomTabNavigator();
+
+export default function App(){
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Dashboard" component={Dashboard}/>
+        <Tab.Screen name="SMS Scanner" component={SMSScanner}/>
+        <Tab.Screen name="URL Scanner" component={URLScanner}/>
+      </Tab.Navigator>
+    </NavigationContainer>
+  )
+}
+EOL
